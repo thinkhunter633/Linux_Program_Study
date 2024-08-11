@@ -44,6 +44,7 @@ int main(void)
             i32recv_len = recv(client_socket, recv_buf, 1024, 0);
             if (i32recv_len > 0)
                 printf("recv length:%d, data: %s\r\n", i32recv_len, recv_buf);
+                send(client_socket, recv_buf, i32recv_len, 0);
         }
     }
     return 0;
