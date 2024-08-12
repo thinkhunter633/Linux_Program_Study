@@ -7,10 +7,10 @@
 TARGET = main
 
 # 源文件
-SRCS = main.c frame_procedure.c
+SRCS = main.c frame_procedure.c http_parser.c
 
 # 头文件
-HDRS = frame_procedure.h
+HDRS = frame_procedure.h http_parser.h
 
 # 编译器
 CC = gcc
