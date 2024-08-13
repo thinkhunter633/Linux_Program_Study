@@ -3,29 +3,29 @@
 # 	gcc -g -w -o $@ $<
 
 
-# 目标文件
+# Targe
 TARGET = main
 
-# 源文件
+# source files
 SRCS = main.c frame_procedure.c http_parser.c
 
-# 头文件
+# header files
 HDRS = frame_procedure.h http_parser.h
 
-# 编译器
+# comiplier
 CC = gcc
 
-# 编译选项
+# option
 CFLAGS = -Wall -g
 
-# 生成目标文件
+# generate the target file
 $(TARGET): $(SRCS) $(HDRS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(SRCS)
 
-# 生成源文件对应的.o文件
+# generate the o files
 %.o: %.c $(HDRS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# 清理生成的文件
+# clean the target file and o files
 clean:
 	rm -f $(TARGET) *.o
