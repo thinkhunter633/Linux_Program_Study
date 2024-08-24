@@ -3,7 +3,7 @@
 #include <string.h>
 #include "http_parser.h"
 
-typedef struct http_message_tag{
+typedef struct http_message_tag {
 
     char request_url[512];
     enum http_method method;
@@ -92,8 +92,7 @@ static http_parser_settings settings = {
 };
 
 
-int32_t frame_procedure(char* buf, int32_t buf_len)
-{
+int32_t frame_procedure(char* buf, int32_t buf_len) {
     // TODO: implement frame procedure
     struct http_parser parser;
 

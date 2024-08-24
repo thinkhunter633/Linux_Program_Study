@@ -47,9 +47,7 @@ int main(void)
                 printf("recv length:%d, data: %s\r\n", i32recv_len, recv_buf);
                 //send(client_socket, recv_buf, i32recv_len, 0);
                 frame_procedure(recv_buf, i32recv_len);
-
             }
-                
         }
     }
     return 0;
