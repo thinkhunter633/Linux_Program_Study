@@ -32,15 +32,34 @@ def handle_websocket_connection(conn):
             break
 
         opcode = data[0] & 0x7f
-        length = data[1] & 0x7f
+        is_masked = (data[1] & 0x80) == 0x80
+        payload_length = data[1] & 0x7f
+
+        if payload_length == 126:
+            payload_length = int.from_bytes(data[2:4], byteorder='big')
+            payload_offset = 4
+        elif payload_length == 127:
+            payload_length = int.from_bytes(data[2:10], byteorder='big')
+            payload_offset = 10
+        else:
+            payload_offset = 2
+
+        if is_masked:
+            masking_key = data[payload_offset : payload_offset + 4]
+            masked_payload = data[payload_offset + 4 : payload_offset + 4 + payload_length]
+            payload = bytes([masked_payload[i] ^ masking_key[i % 4] for i in range(payload_length)])
+        else:
+            payload = data[payload_offset : payload_offset + payload_length]
+
+        if len(data) < payload_offset + payload_length:
+            continue
 
         if opcode == 8:   # 收到关闭消息
             print("Received close message.")
             conn.close()
             return
         elif opcode == 1:   # 收到文本消息
-            # message = str(data[2:], 'utf-8')
-            message = str(data[2:])
+            message = str(payload, 'utf-8')
             print(f"Received text message: {message}")
 
             # 回复收到的消息
@@ -48,6 +67,7 @@ def handle_websocket_connection(conn):
 
 def main():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
+        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server_socket.bind((HOST, PORT))
         server_socket.listen()
 
@@ -76,6 +96,7 @@ def main():
             conn.send(bytes(response, 'utf-8'))
 
             handle_websocket_connection(conn)
+            exit()
 
 if __name__ == '__main__':
     main()
